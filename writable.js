@@ -4,7 +4,7 @@ const HLS = require('hls-parser');
 
 const {storeData} = require('./file');
 
-const print = debug('hls-streams-file-writer');
+const print = debug('hlx-file-writer');
 
 class WriteStream extends stream.Transform {
   constructor(options) {

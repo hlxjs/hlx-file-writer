@@ -8,7 +8,7 @@
 A writable stream to save HLS playlists/segments as local files
 
 ## Features
-* Being used with other `hls-streams` objects, it provides a functionality to write every HLS related data (playlist and segments) to your local filesystem.
+* Being used with other [`hlx`](https://github.com/hlxjs) objects, it provides a functionality to write every HLS related data (playlist and segments) to your local filesystem.
 * It determines the local path for each files based on the `uri` described in the HLS playlist.
 * The hostname contained in the `uri` will be ignored (e.g. "https://foo.bar/abc/def.m3u8" is translated into "{rootPath}/abc/def.m3u8")
 
