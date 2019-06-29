@@ -35,7 +35,7 @@ test.cb('file.storeData.Buffer', t => {
 
 test.cb('file.storeData.Stream', t => {
   const mockFs = {
-    createFileWriter(path) {
+    createWriteStream(path) {
       return {path};
     },
     existsSync() {
@@ -52,7 +52,7 @@ test.cb('file.storeData.Stream', t => {
 
   delete require.cache[require.resolve('fs')];
   const {storeData} = proxyquire('../../file', {fs: mockFs});
-  const spyCreateWriteStream = sinon.spy(mockFs, 'createFileWriter');
+  const spyCreateWriteStream = sinon.spy(mockFs, 'createWriteStream');
 
   const data = {
     pipe({path}) {

@@ -20,12 +20,12 @@ A writable stream to save HLS playlists/segments as local files
 ```js
 const {createReadStream} = require('hlx-file-reader');
 const {createUrlRewriter} = require('hlx-url-rewriter');
-const {createFileWriter} = require('hlx-file-writer'); // file-writer
+const {createWriteStream} = require('hlx-file-writer'); // file-writer
 const {createTerminator} = require('hlx-terminator')
 
 const src = createReadStream('https://foo.bar/sample.m3u8');
 const rewrite = createUrlRewriter();
-const save = createFileWriter({
+const save = createWriteStream({
   rootPath: '/var/www/media/',
   storePlaylist: true
 });
@@ -40,7 +40,7 @@ src.pipe(rewrite).pipe(save).pipe(dest)
 ## API
 The features are built on top of the Node's [transform streams](https://nodejs.org/api/stream.html#stream_class_stream_transform).
 
-### `createFileWriter([options])`
+### `createWriteStream([options])`
 Creates a new `TransformStream` object.
 
 #### params

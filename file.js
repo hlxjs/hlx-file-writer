@@ -34,7 +34,7 @@ function storeData({uri, data}, rootPath) {
 
   // Stream
   return new Promise((resolve, reject) => {
-    data.pipe(fs.createFileWriter(localPath))
+    data.pipe(fs.createWriteStream(localPath))
     .on('finish', () => {
       return resolve(localPath);
     })
