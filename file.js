@@ -12,7 +12,13 @@ function storeData({uri, data}, rootPath) {
     rootPath = path.join(process.cwd(), rootPath);
   }
 
-  const localPath = path.join(rootPath, getPath(uri));
+  let localPath;
+
+  if (path.isAbsolute(uri) && fs.existsSync(uri)) {
+    localPath = path.join(rootPath, path.basename(uri));
+  } else {
+    localPath = path.join(rootPath, getPath(uri));
+  }
 
   // Create directory
   const dir = path.dirname(localPath);
