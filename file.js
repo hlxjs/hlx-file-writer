@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const {getPath} = require('./util');
+const {tryCatch} = require('hlx-util');
 
 function storeData({uri, data}, rootPath) {
   if (!data) {
@@ -14,10 +14,15 @@ function storeData({uri, data}, rootPath) {
 
   let localPath;
 
-  if (path.isAbsolute(uri) && fs.existsSync(uri)) {
-    localPath = path.join(rootPath, path.basename(uri));
+  if (path.isAbsolute(uri)) {
+    localPath = path.join(rootPath, path.relative(rootPath, uri));
   } else {
-    localPath = path.join(rootPath, getPath(uri));
+    const obj = tryCatch(
+      () => new URL(uri),
+      () => new URL(uri, rootPath),
+      () => null
+    );
+    localPath = path.join(rootPath, obj ? obj.pathname : uri);
   }
 
   // Create directory
