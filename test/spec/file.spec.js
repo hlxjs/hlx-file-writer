@@ -33,6 +33,37 @@ test.cb('file.storeData.Buffer', t => {
   });
 });
 
+test.cb('file.storeData.Buffer.path', t => {
+  const mockFs = {
+    writeFile(path, data, cb) {
+      setImmediate(() => {
+        cb(null, path);
+      });
+    },
+    existsSync() {
+      return true;
+    },
+    lstatSync() {
+      return {
+        isDirectory() {
+          return true;
+        }
+      };
+    }
+  };
+
+  delete require.cache[require.resolve('fs')];
+  const {storeData} = proxyquire('../../file', {fs: mockFs});
+  const spyWriteFile = sinon.spy(mockFs, 'writeFile');
+
+  storeData({uri: '/abc/def/ghi/jkl.mp4', data: Buffer.alloc(10)}, '/abc/def/')
+  .then(destPath => {
+    t.is(destPath, '/abc/def/ghi/jkl.mp4');
+    t.is(spyWriteFile.callCount, 1);
+    t.end();
+  });
+});
+
 test.cb('file.storeData.Stream', t => {
   const mockFs = {
     createWriteStream(path) {
