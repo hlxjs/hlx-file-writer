@@ -15,7 +15,7 @@ function storeData({uri, data}, rootPath) {
   let localPath;
 
   if (path.isAbsolute(uri)) {
-    localPath = path.join(rootPath, path.relative(rootPath, uri));
+    localPath = path.join(rootPath, uri);
   } else {
     const obj = tryCatch(
       () => new URL(uri),
