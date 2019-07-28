@@ -3,6 +3,7 @@ const test = require('ava');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 const HLS = require('hls-parser');
+const {tryCatch} = require('hlx-util');
 
 const {Segment} = HLS.types;
 
@@ -112,21 +113,18 @@ test.cb('writeStream.onlySegments', t => {
       setImmediate(() => {
         cb(null, path);
       });
-    },
-    existsSync() {
-      return true;
-    },
-    lstatSync() {
-      return {
-        isDirectory() {
-          return true;
-        }
-      };
+    }
+  };
+
+  const mockUtil = {
+    tryCatch,
+    mkdirP() {
+      // NOP
     }
   };
 
   delete require.cache[require.resolve('fs')];
-  const mockFile = proxyquire('../../file', {fs: mockFs});
+  const mockFile = proxyquire('../../file', {fs: mockFs, 'hlx-util': mockUtil});
   const WriteStream = proxyquire('../../writable', {'./file': mockFile});
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
@@ -146,21 +144,18 @@ test.cb('writeStream.all', t => {
       setImmediate(() => {
         cb(null, path);
       });
-    },
-    existsSync() {
-      return true;
-    },
-    lstatSync() {
-      return {
-        isDirectory() {
-          return true;
-        }
-      };
+    }
+  };
+
+  const mockUtil = {
+    tryCatch,
+    mkdirP() {
+      // NOP
     }
   };
 
   delete require.cache[require.resolve('fs')];
-  const mockFile = proxyquire('../../file', {fs: mockFs});
+  const mockFile = proxyquire('../../file', {fs: mockFs, 'hlx-util': mockUtil});
   const WriteStream = proxyquire('../../writable', {'./file': mockFile});
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
