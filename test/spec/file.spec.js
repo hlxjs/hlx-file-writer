@@ -56,9 +56,9 @@ test.cb('file.storeData.Buffer.path', t => {
   const {storeData} = proxyquire('../../file', {fs: mockFs});
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
-  storeData({uri: '/abc/def/ghi/jkl.mp4', data: Buffer.alloc(10)}, '/abc/def/')
+  storeData({uri: '/abc/def/ghi/jkl.mp4', data: Buffer.alloc(10)}, '/path/to/')
   .then(destPath => {
-    t.is(destPath, '/abc/def/ghi/jkl.mp4');
+    t.is(destPath, '/path/to/abc/def/ghi/jkl.mp4');
     t.is(spyWriteFile.callCount, 1);
     t.end();
   });
