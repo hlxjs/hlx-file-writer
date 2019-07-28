@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const {tryCatch} = require('hlx-util');
+const {tryCatch, mkdirP} = require('hlx-util');
 
 function storeData({uri, data}, rootPath) {
   if (!data) {
@@ -26,10 +26,7 @@ function storeData({uri, data}, rootPath) {
   }
 
   // Create directory
-  const dir = path.dirname(localPath);
-  if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) {
-    fs.mkdirSync(dir, {recursive: true});
-  }
+  mkdirP(path.dirname(localPath));
 
   if (typeof data.pipe !== 'function') {
     // Text or Buffer

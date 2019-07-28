@@ -1,6 +1,7 @@
 const test = require('ava');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
+const {tryCatch} = require('hlx-util');
 
 test.cb('file.storeData.Buffer', t => {
   const mockFs = {
@@ -8,21 +9,18 @@ test.cb('file.storeData.Buffer', t => {
       setImmediate(() => {
         cb(null, path);
       });
-    },
-    existsSync() {
-      return true;
-    },
-    lstatSync() {
-      return {
-        isDirectory() {
-          return true;
-        }
-      };
+    }
+  };
+
+  const mockUtil = {
+    tryCatch,
+    mkdirP() {
+      // NOP
     }
   };
 
   delete require.cache[require.resolve('fs')];
-  const {storeData} = proxyquire('../../file', {fs: mockFs});
+  const {storeData} = proxyquire('../../file', {fs: mockFs, 'hlx-util': mockUtil});
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
   storeData({uri: 'ghi.mp4', data: Buffer.alloc(10)}, '/abc/def/')
@@ -39,21 +37,18 @@ test.cb('file.storeData.Buffer.path', t => {
       setImmediate(() => {
         cb(null, path);
       });
-    },
-    existsSync() {
-      return true;
-    },
-    lstatSync() {
-      return {
-        isDirectory() {
-          return true;
-        }
-      };
+    }
+  };
+
+  const mockUtil = {
+    tryCatch,
+    mkdirP() {
+      // NOP
     }
   };
 
   delete require.cache[require.resolve('fs')];
-  const {storeData} = proxyquire('../../file', {fs: mockFs});
+  const {storeData} = proxyquire('../../file', {fs: mockFs, 'hlx-util': mockUtil});
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
   storeData({uri: '/abc/def/ghi/jkl.mp4', data: Buffer.alloc(10)}, '/path/to/')
@@ -68,21 +63,18 @@ test.cb('file.storeData.Stream', t => {
   const mockFs = {
     createWriteStream(path) {
       return {path};
-    },
-    existsSync() {
-      return true;
-    },
-    lstatSync() {
-      return {
-        isDirectory() {
-          return true;
-        }
-      };
+    }
+  };
+
+  const mockUtil = {
+    tryCatch,
+    mkdirP() {
+      // NOP
     }
   };
 
   delete require.cache[require.resolve('fs')];
-  const {storeData} = proxyquire('../../file', {fs: mockFs});
+  const {storeData} = proxyquire('../../file', {fs: mockFs, 'hlx-util': mockUtil});
   const spyCreateWriteStream = sinon.spy(mockFs, 'createWriteStream');
 
   const data = {
