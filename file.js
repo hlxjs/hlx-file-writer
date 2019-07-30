@@ -28,7 +28,12 @@ function storeData({uri, parentUri, data}, {inputDir, outputDir}) {
       () => null
     );
     if (obj) {
-      localPath = path.join(outputDir, obj.pathname);
+      if (obj.protocol === 'file:') {
+        const pathname = path.relative(inputDir, obj.pathname);
+        localPath = path.join(outputDir, pathname);
+      } else {
+        localPath = path.join(outputDir, obj.pathname);
+      }
     } else {
       const pathname = path.relative(inputDir, path.join(parentUri, uri));
       localPath = path.join(outputDir, pathname);

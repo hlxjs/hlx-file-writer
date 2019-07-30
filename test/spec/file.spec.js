@@ -92,9 +92,9 @@ test.cb('file.storeData.Stream', t => {
     }
   };
 
-  storeData({uri: 'ghi.mp4', parentUri: 'file:///path/to/main.m3u8', data}, {inputDir: '/', outputDir: '/abc/def/'})
+  storeData({uri: 'ghi.mp4', parentUri: 'file:///path/to/main.m3u8', data}, {inputDir: '/path/to', outputDir: '/abc/def/'})
   .then(destPath => {
-    t.is(destPath, '/abc/def/path/to/ghi.mp4');
+    t.is(destPath, '/abc/def/ghi.mp4');
     t.is(spyCreateWriteStream.callCount, 1);
     t.end();
   });
