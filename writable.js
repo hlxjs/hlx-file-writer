@@ -10,7 +10,7 @@ class WriteStream extends stream.Transform {
   constructor(options) {
     super({objectMode: true});
     this.outputDir = options.outputDir || process.cwd();
-    this.outputDir = options.inputDir || '/';
+    this.inputDir = options.inputDir || '/';
     this.shouldStorePlaylist = Boolean(options.storePlaylist);
   }
 
