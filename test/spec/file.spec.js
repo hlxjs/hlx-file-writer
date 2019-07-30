@@ -23,7 +23,7 @@ test.cb('file.storeData.Buffer', t => {
   const {storeData} = proxyquire('../../file', {fs: mockFs, 'hlx-util': mockUtil});
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
-  storeData({uri: 'ghi.mp4', data: Buffer.alloc(10)}, '/abc/def/')
+  storeData({uri: 'ghi.mp4', parentUri: 'http://foo.bar.com/main.m3u8', data: Buffer.alloc(10)}, {inputDir: '/does/not/matter', outputDir: '/abc/def/'})
   .then(destPath => {
     t.is(destPath, '/abc/def/ghi.mp4');
     t.is(spyWriteFile.callCount, 1);
@@ -51,9 +51,9 @@ test.cb('file.storeData.Buffer.path', t => {
   const {storeData} = proxyquire('../../file', {fs: mockFs, 'hlx-util': mockUtil});
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
-  storeData({uri: '/abc/def/ghi/jkl.mp4', data: Buffer.alloc(10)}, '/path/to/')
+  storeData({uri: '/abc/def/ghi/jkl.mp4', parentUri: 'file:///path/to/main.m3u8', data: Buffer.alloc(10)}, {inputDir: '/path/to', outputDir: '/root/dir/'})
   .then(destPath => {
-    t.is(destPath, '/path/to/abc/def/ghi/jkl.mp4');
+    t.is(destPath, '/root/dir/abc/def/ghi/jkl.mp4');
     t.is(spyWriteFile.callCount, 1);
     t.end();
   });
@@ -92,9 +92,9 @@ test.cb('file.storeData.Stream', t => {
     }
   };
 
-  storeData({uri: 'ghi.mp4', data}, '/abc/def/')
+  storeData({uri: 'ghi.mp4', parentUri: 'file:///path/to/main.m3u8', data}, {inputDir: '/', outputDir: '/abc/def/'})
   .then(destPath => {
-    t.is(destPath, '/abc/def/ghi.mp4');
+    t.is(destPath, '/abc/def/path/to/ghi.mp4');
     t.is(spyCreateWriteStream.callCount, 1);
     t.end();
   });

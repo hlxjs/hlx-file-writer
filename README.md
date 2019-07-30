@@ -11,7 +11,8 @@ A writable stream to save HLS playlists/segments as local files
 ## Features
 * Being used with other [`hlx`](https://github.com/hlxjs) objects, it provides a functionality to write every HLS related data (playlist and segments) to your local filesystem.
 * It determines the local path for each files based on the `uri` described in the HLS playlist.
-* The hostname contained in the `uri` will be ignored (e.g. "https://foo.bar/abc/def.m3u8" is translated into "{rootPath}/abc/def.m3u8")
+* The hostname contained in the `uri` will be ignored (e.g. "https://foo.bar/abc/def.m3u8" is translated into "{outputDir}/abc/def.m3u8")
+* If the `uri` is a file url, users can specify a root directory (`inputDir`) from which the file should be read (e.g. "file://path/to/abc/def.m3u8", inputDir="/path/to", is translated into "{outputDir}/abc/def.m3u8")
 
 ## Install
 [![NPM](https://nodei.co/npm/hlx-file-writer.png?mini=true)](https://nodei.co/npm/hlx-file-writer/)
@@ -27,7 +28,7 @@ const {createTerminator} = require('hlx-terminator')
 const src = createReadStream('https://foo.bar/sample.m3u8');
 const rewrite = createUrlRewriter();
 const save = createWriteStream({
-  rootPath: '/var/www/media/',
+  outputDir: '/var/www/media/',
   storePlaylist: true
 });
 const dest = createTerminator();
@@ -52,7 +53,8 @@ Creates a new `TransformStream` object.
 #### options
 | Name        | Type   | Default | Description                       |
 | ----------- | ------ | ------- | --------------------------------- |
-| rootPath | string | process.CWD()     | The root directory in which all the files are stored |
+| inputDir | string | / | The root directory from which all the files are read (This option is only used in case of file urls) |
+| outputDir | string | process.CWD()     | The root directory to which all the files are written |
 | storePlaylist | boolean | false   | If true, the playlist files are also stored as local files |
 
 #### return value

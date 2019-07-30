@@ -129,7 +129,7 @@ test.cb('writeStream.onlySegments', t => {
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
   const src = new MockReadStream();
-  const fileOutput = new WriteStream({rootPath: '/var/foo/'});
+  const fileOutput = new WriteStream({outputDir: '/var/foo/'});
   const dest = new NullWriteStream();
   src.pipe(fileOutput).pipe(dest)
   .on('finish', () => {
@@ -160,7 +160,7 @@ test.cb('writeStream.all', t => {
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
   const src = new MockReadStream();
-  const fileOutput = new WriteStream({rootPath: '/var/foo/', storePlaylist: true});
+  const fileOutput = new WriteStream({outputDir: '/var/foo/', storePlaylist: true});
   const dest = new NullWriteStream();
   src.pipe(fileOutput).pipe(dest)
   .on('finish', () => {
