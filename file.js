@@ -1,28 +1,38 @@
 const fs = require('fs');
 const path = require('path');
-
+const {URL} = require('url');
+const debug = require('debug');
 const {tryCatch, mkdirP} = require('hlx-util');
 
-function storeData({uri, data}, rootPath) {
+const print = debug('hlx-file-writer');
+
+function storeData({uri, parentUri, data}, {inputDir, outputDir}) {
   if (!data) {
     return Promise.reject(new Error('No segment data'));
   }
 
-  if (!path.isAbsolute(rootPath)) {
-    rootPath = path.join(process.cwd(), rootPath);
+  if (!path.isAbsolute(outputDir)) {
+    outputDir = path.join(process.cwd(), outputDir);
   }
 
   let localPath;
 
+  print(`storeData: uri=${uri}, parentUri=${parentUri}, inputDir=${inputDir}, outputDir=${outputDir}`);
+
   if (path.isAbsolute(uri)) {
-    localPath = path.join(rootPath, uri);
+    localPath = path.join(outputDir, uri);
   } else {
     const obj = tryCatch(
       () => new URL(uri),
-      () => new URL(uri, rootPath),
+      () => new URL(uri, parentUri),
       () => null
     );
-    localPath = path.join(rootPath, obj ? obj.pathname : uri);
+    if (obj) {
+      localPath = path.join(outputDir, obj.pathname);
+    } else {
+      const pathname = path.relative(inputDir, path.join(parentUri, uri));
+      localPath = path.join(outputDir, pathname);
+    }
   }
 
   // Create directory

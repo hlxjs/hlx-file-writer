@@ -9,7 +9,8 @@ const print = debug('hlx-file-writer');
 class WriteStream extends stream.Transform {
   constructor(options) {
     super({objectMode: true});
-    this.rootPath = options.rootPath || process.cwd();
+    this.outputDir = options.outputDir || process.cwd();
+    this.outputDir = options.inputDir || '/';
     this.shouldStorePlaylist = Boolean(options.storePlaylist);
   }
 
@@ -22,10 +23,10 @@ class WriteStream extends stream.Transform {
     let params = data;
 
     if (data.type === 'playlist') {
-      params = {uri: data.uri, data: HLS.stringify(data)};
+      params = {uri: data.uri, parentUri: data.parentUri, data: HLS.stringify(data)};
     }
 
-    storeData(params, this.rootPath)
+    storeData(params, this)
     .then(path => {
       print(`The data is written to ${path}`);
       this.push(data);
