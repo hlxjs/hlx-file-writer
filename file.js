@@ -6,6 +6,20 @@ const {tryCatch, mkdirP} = require('hlx-util');
 
 const print = debug('hlx-file-writer');
 
+function getLocalPath(url, inputDir, outputDir) {
+  const obj = tryCatch(
+    () => new URL(url),
+    () => null
+  );
+  if (!obj) {
+    return '';
+  }
+  if (obj.protocol === 'file:') {
+    return path.join(outputDir, path.relative(inputDir, obj.pathname));
+  }
+  return path.join(outputDir, obj.hostname, obj.pathname);
+}
+
 function storeData({uri, parentUri, data}, {inputDir, outputDir}) {
   if (!data) {
     return Promise.reject(new Error('No segment data'));
@@ -22,21 +36,14 @@ function storeData({uri, parentUri, data}, {inputDir, outputDir}) {
   if (path.isAbsolute(uri)) {
     localPath = path.join(outputDir, uri);
   } else {
-    const obj = tryCatch(
-      () => new URL(uri),
-      () => new URL(uri, parentUri),
-      () => null
-    );
-    if (obj) {
-      if (obj.protocol === 'file:') {
-        const pathname = path.relative(inputDir, obj.pathname);
-        localPath = path.join(outputDir, pathname);
+    localPath = getLocalPath(uri, inputDir, outputDir);
+    if (!localPath) {
+      const basePath = getLocalPath(parentUri, inputDir, outputDir);
+      if (basePath) {
+        localPath = path.join(path.dirname(basePath), uri);
       } else {
-        localPath = path.join(outputDir, obj.pathname);
+        localPath = path.join(outputDir, path.relative(inputDir, path.join(parentUri, uri)));
       }
-    } else {
-      const pathname = path.relative(inputDir, path.join(parentUri, uri));
-      localPath = path.join(outputDir, pathname);
     }
   }
 

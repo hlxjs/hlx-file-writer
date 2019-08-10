@@ -25,7 +25,7 @@ test.cb('file.storeData.Buffer', t => {
 
   storeData({uri: 'ghi.mp4', parentUri: 'http://foo.bar.com/main.m3u8', data: Buffer.alloc(10)}, {inputDir: '/does/not/matter', outputDir: '/abc/def/'})
   .then(destPath => {
-    t.is(destPath, '/abc/def/ghi.mp4');
+    t.is(destPath, '/abc/def/foo.bar.com/ghi.mp4');
     t.is(spyWriteFile.callCount, 1);
     t.end();
   });
