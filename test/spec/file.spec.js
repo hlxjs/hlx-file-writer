@@ -23,7 +23,7 @@ test.cb('file.storeData.Buffer', t => {
   const {storeData} = proxyquire('../../file', {fs: mockFs, 'hlx-util': mockUtil});
   const spyWriteFile = sinon.spy(mockFs, 'writeFile');
 
-  storeData({uri: 'ghi.mp4', parentUri: 'http://foo.bar.com/main.m3u8', data: Buffer.alloc(10)}, {inputDir: '/does/not/matter', outputDir: '/abc/def/'})
+  storeData({uri: 'ghi.mp4?foo=bar', parentUri: 'http://foo.bar.com/main.m3u8', data: Buffer.alloc(10)}, {inputDir: '/does/not/matter', outputDir: '/abc/def/'})
   .then(destPath => {
     t.is(destPath, '/abc/def/foo.bar.com/ghi.mp4');
     t.is(spyWriteFile.callCount, 1);
