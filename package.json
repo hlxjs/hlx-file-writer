@@ -1,6 +1,6 @@
 {
   "name": "hlx-file-writer",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A writable stream to save HLS playlists/segments as local files",
   "main": "index.js",
   "directories": {
