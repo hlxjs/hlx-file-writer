@@ -50,8 +50,8 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
-    "hls-parser": "^0.4.5",
-    "hlx-util": "0.0.9"
+    "hls-parser": "^0.4.6",
+    "hlx-util": "0.0.10"
   },
   "devDependencies": {
     "ava": "^2.4.0",
